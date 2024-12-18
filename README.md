@@ -12,7 +12,7 @@ Click [here](https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e
 Download the package:
 
 ```bash
-go get github.com/jsfelipearaujo/cpfcnpj@latest
+go get github.com/jfelipearaujo/cpfcnpj@latest
 ```
 
 ## How to use - CPF Validation
@@ -43,7 +43,7 @@ if err != nil {
 Import the package:
 
 ```go
-import "github.com/jsfelipearaujo/cpfcnpj/cnpj"
+import "github.com/jfelipearaujo/cpfcnpj/cnpj"
 ```
 
 Create a new instance of the service:

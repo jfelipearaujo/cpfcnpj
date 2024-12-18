@@ -3,7 +3,7 @@ package cpf_test
 import (
 	"testing"
 
-	"github.com/jsfelipearaujo/cpfcnpj/cpf"
+	"github.com/jfelipearaujo/cpfcnpj/cpf"
 	"github.com/stretchr/testify/assert"
 )
 

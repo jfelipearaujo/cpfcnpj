@@ -3,7 +3,7 @@ package cnpj_test
 import (
 	"testing"
 
-	"github.com/jsfelipearaujo/cpfcnpj/cnpj"
+	"github.com/jfelipearaujo/cpfcnpj/cnpj"
 	"github.com/stretchr/testify/assert"
 )
 

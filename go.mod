@@ -1,4 +1,4 @@
-module github.com/jsfelipearaujo/cpfcnpj
+module github.com/jfelipearaujo/cpfcnpj
 
 go 1.23.4
 
