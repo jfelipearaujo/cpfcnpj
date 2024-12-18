@@ -1,4 +1,5 @@
 # cpfcnpj
+[![tests](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/tests.yml/badge.svg)](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/tests.yml)
 
 Package responsible to check if a CPF or CNPJ is valid or not.
 
