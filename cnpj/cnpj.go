@@ -21,8 +21,8 @@ func (svc *service) IsValid() error {
 		return ErrInvalidLength
 	}
 
-	firstVerificationDigit := svc.calculateDigitFromFirstVersion(true)
-	secondVerificationDigit := svc.calculateDigitFromFirstVersion(false)
+	firstVerificationDigit := svc.calculateDigit(true)
+	secondVerificationDigit := svc.calculateDigit(false)
 
 	if firstVerificationDigit != int(svc.CNPJ[12]-'0') || secondVerificationDigit != int(svc.CNPJ[13]-'0') {
 		return ErrInvalidCnpj
@@ -35,7 +35,7 @@ func (svc *service) clean() {
 	svc.CNPJ = patternNumbersLetters.ReplaceAllString(svc.CNPJ, "")
 }
 
-func (svc *service) calculateDigitFromFirstVersion(isFirst bool) int {
+func (svc *service) calculateDigit(isFirst bool) int {
 	maxIndex := 12
 	weights := 2
 
