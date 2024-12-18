@@ -20,7 +20,7 @@ go get github.com/jfelipearaujo/cpfcnpj@latest
 Import the package:
 
 ```go
-import "github.com/jsfelipearaujo/cpf"
+import "github.com/jfelipearaujo/cpf"
 ```
 
 Create a new instance of the service:
