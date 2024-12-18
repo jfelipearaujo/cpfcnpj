@@ -1,0 +1,30 @@
+name: tests
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - '**.go'
+      - go.sum
+      - go.mod
+  pull_request:
+    types: [opened, synchronize, reopened]
+
+jobs:
+  tests:
+    strategy:
+      fail-fast: true
+      matrix:
+        go-version: [1.23.x]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Run Tests
+        run: make test
