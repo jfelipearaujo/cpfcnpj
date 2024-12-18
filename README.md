@@ -1,5 +1,7 @@
 # cpfcnpj
 [![tests](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/tests.yml/badge.svg)](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/tests.yml)
+[![version](https://img.shields.io/github/v/release/jfelipearaujo/cpfcnpj.svg)](https://github.com/jfelipearaujo/cpfcnpj/releases/latest)
+[![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jfelipearaujo/cpfcnpj/blob/main/LICENSE)
 
 Package responsible to check if a CPF or CNPJ is valid or not.
 
