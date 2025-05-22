@@ -29,8 +29,24 @@ func (svc *service) IsValid(cnpj string) error {
 	return nil
 }
 
-func (svc *service) Generate(pretty bool) string {
-	cnpj := shared.RandomLettersAndNumbers(EXPECTED_LENGTH - 2)
+func (svc *service) Generate(opts ...func(*generatorOptions)) string {
+	genOpts := &generatorOptions{
+		version: V1,
+	}
+	for _, opt := range opts {
+		opt(genOpts)
+	}
+
+	var cnpj []rune
+	length := EXPECTED_LENGTH - 2
+
+	switch genOpts.version {
+	case V1:
+		cnpj = shared.NumbersToRunes(shared.RandomNumbers(length))
+	case V2:
+		cnpj = shared.RandomLettersAndNumbers(length)
+	}
+
 	cnpj = append(cnpj, svc.calculateDigit(cnpj, len(cnpj)))
 	cnpj = append(cnpj, svc.calculateDigit(cnpj, len(cnpj)))
 
@@ -40,7 +56,7 @@ func (svc *service) Generate(pretty bool) string {
 		out += string(digit)
 	}
 
-	if pretty {
+	if genOpts.prettyFormat {
 		out = fmt.Sprintf("%s.%s.%s/%s-%s", out[0:2], out[2:5], out[5:8], out[8:12], out[12:14])
 	}
 

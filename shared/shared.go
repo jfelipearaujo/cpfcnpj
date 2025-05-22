@@ -41,6 +41,14 @@ func RandomNumbers(length int) []int {
 	return out
 }
 
+func NumbersToRunes(data []int) []rune {
+	out := make([]rune, len(data))
+	for i, d := range data {
+		out[i] = rune(d + '0')
+	}
+	return out
+}
+
 func RandomLettersAndNumbers(length int) []rune {
 	out := make([]rune, length)
 	for i := range out {

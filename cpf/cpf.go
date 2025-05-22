@@ -30,7 +30,12 @@ func (svc *service) IsValid(cpf string) error {
 	return nil
 }
 
-func (svc *service) Generate(pretty bool) string {
+func (svc *service) Generate(opts ...func(*generatorOptions)) string {
+	genOpts := &generatorOptions{}
+	for _, opt := range opts {
+		opt(genOpts)
+	}
+
 	cpf := shared.RandomNumbers(EXPECTED_LENGTH - 2)
 	cpf = append(cpf, svc.calculateDigit(cpf, len(cpf)))
 	cpf = append(cpf, svc.calculateDigit(cpf, len(cpf)))
@@ -41,7 +46,7 @@ func (svc *service) Generate(pretty bool) string {
 		out += strconv.Itoa(digit)
 	}
 
-	if pretty {
+	if genOpts.prettyFormat {
 		out = fmt.Sprintf("%s.%s.%s-%s", out[0:3], out[3:6], out[6:9], out[9:11])
 	}
 

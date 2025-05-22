@@ -20,7 +20,36 @@ type Service interface {
 	// Example:
 	//
 	//	svc := cnpj.New()
-	//	cnpj := svc.Generate(true)	// true for pretty format
-	//	fmt.Println(cnpj)		// 12.ABC.345/01DE-35
-	Generate(pretty bool) string
+	//	cnpj := svc.Generate()
+	//	fmt.Println(cnpj) // 12ABC34501DE35
+	Generate(opts ...func(*generatorOptions)) string
+}
+
+type generatorOptions struct {
+	version      Version
+	prettyFormat bool
+}
+
+// Sets the version of the CNPJ when generating a new one
+//
+// # Note: This function by default will generate a CNPJ with the version V1
+//
+// Example:
+//
+//	cnpj := svc.Generate(cnpj.WithVersion(cnpj.V2))
+func WithVersion(version Version) func(*generatorOptions) {
+	return func(opts *generatorOptions) {
+		opts.version = version
+	}
+}
+
+// Sets the pretty format of the CNPJ when generating a new one
+//
+// Example:
+//
+//	cnpj := svc.Generate(cnpj.WithPrettyFormat())
+func WithPrettyFormat() func(*generatorOptions) {
+	return func(opts *generatorOptions) {
+		opts.prettyFormat = true
+	}
 }

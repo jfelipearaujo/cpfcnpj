@@ -82,6 +82,21 @@ func TestRandomNumbers(t *testing.T) {
 	})
 }
 
+func TestNumbersToRunes(t *testing.T) {
+	t.Run("Should convert a slice of numbers to a slice of runes", func(t *testing.T) {
+		// Arrange
+		data := []int{1, 2, 3, 4, 5, 6, 7, 8, 9, 0}
+
+		// Act
+		res := shared.NumbersToRunes(data)
+
+		// Assert
+		if len(res) != len(data) {
+			t.Errorf("Expected result to be %v, got %v", len(data), len(res))
+		}
+	})
+}
+
 func TestRandomLettersAndNumbers(t *testing.T) {
 	t.Run("Should generate a slice of random letters and numbers", func(t *testing.T) {
 		// Arrange

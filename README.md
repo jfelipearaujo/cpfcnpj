@@ -6,7 +6,7 @@
 
 Package responsible to check if a CPF or CNPJ is valid or not.
 
-NOTE: This package is able to handle the new **alphanumeric** format of CNPJ that is expected to be used in Brazil in July 2026.
+NOTE: This package is able to handle the new **alphanumeric** format of CNPJ that is expected to be used in Brazil from July 2026.
 
 Click [here](https://www.gov.br/receitafederal/pt-br/acesso-a-informacao/acoes-e-programas/programas-e-atividades/cnpj-alfanumerico#:~:text=O%20CNPJ%20Alfanum%C3%A9rico%20ser%C3%A1%20atribu%C3%ADdo,com%20o%20seu%20n%C3%BAmero%20v%C3%A1lido!) for more information about the new format.
 
@@ -19,12 +19,18 @@ go get github.com/jfelipearaujo/cpfcnpj@latest
 
 - [cpfcnpj](#cpfcnpj)
 - [How to use](#how-to-use)
+  - [Examples](#examples)
   - [CPF Validation](#cpf-validation)
   - [CNPJ Validation](#cnpj-validation)
   - [CPF Generator](#cpf-generator)
   - [CNPJ Generator](#cnpj-generator)
+    - [CNPJ Version](#cnpj-version)
   - [Contributing](#contributing)
   - [LICENSE](#license)
+
+## Examples
+
+You can find some examples in the [examples](examples) folder.
 
 ## CPF Validation
 
@@ -89,7 +95,13 @@ svc := cpf.New()
 Generate a new CPF:
 
 ```go
-cpf := svc.Generate(true) // true to generate with pretty format
+cpf := svc.Generate()
+```
+
+If you want to generate the CPF with pretty format, do the following:
+
+```go
+cpf := svc.Generate(cpf.WithPrettyFormat())
 ```
 
 ## CNPJ Generator
@@ -109,12 +121,30 @@ svc := cnpj.New()
 Generate a new CNPJ:
 
 ```go
-cnpj := svc.Generate(true) // true to generate with pretty format
+cnpj := svc.Generate()
+```
+
+If you want to generate the CNPJ with pretty format, do the following:
+
+```go
+cnpj := svc.Generate(cnpj.WithPrettyFormat())
+```
+
+### CNPJ Version
+
+This package is able to handle the new **alphanumeric** format of CNPJ that is expected to be used in Brazil from July 2026.
+
+By default every CNPJ generate will use the V1 version with only numbers, but if you want to generate a CNPJ with the new version, do the following:
+
+```go
+cnpj := svc.Generate(cnpj.WithVersion(cnpj.V2))
 ```
 
 ## Contributing
 
 Contributions are welcome!
+
+Please read the [CONTRIBUTING](CONTRIBUTING.md) file for details on our code of conduct, and the process for submitting pull requests.
 
 ## LICENSE
 
