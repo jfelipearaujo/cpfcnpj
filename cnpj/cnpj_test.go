@@ -101,15 +101,17 @@ func TestIsValid(t *testing.T) {
 }
 
 func TestGenerate(t *testing.T) {
-	cnpjRegexPretty := regexp.MustCompile(`^[A-Z0-9]{2}\.[A-Z0-9]{3}\.[A-Z0-9]{3}\/[A-Z0-9]{4}\-\d{2}$`)
-	cnpjRegexNonPretty := regexp.MustCompile(`^[A-Z0-9]{12}\d{2}$`)
+	cnpjV1RegexPretty := regexp.MustCompile(`^[0-9]{2}\.[0-9]{3}\.[0-9]{3}\/[0-9]{4}\-\d{2}$`)
+	cnpjV2RegexPretty := regexp.MustCompile(`^[A-Z0-9]{2}\.[A-Z0-9]{3}\.[A-Z0-9]{3}\/[A-Z0-9]{4}\-\d{2}$`)
+	cnpjV1RegexNonPretty := regexp.MustCompile(`^[0-9]{12}\d{2}$`)
+	cnpjV2RegexNonPretty := regexp.MustCompile(`^[A-Z0-9]{12}\d{2}$`)
 
-	t.Run("Should return a valid CNPJ in pretty mode", func(t *testing.T) {
+	t.Run("Should return a valid CNPJ in pretty mode [V1]", func(t *testing.T) {
 		// Arrange
 		sut := cnpj.New()
 
 		// Act
-		res := sut.Generate(true)
+		res := sut.Generate(cnpj.WithPrettyFormat())
 
 		// Assert
 		err := sut.IsValid(res)
@@ -118,17 +120,17 @@ func TestGenerate(t *testing.T) {
 			t.Errorf("Expected no error, got: %v", err)
 		}
 
-		if !cnpjRegexPretty.MatchString(res) {
+		if !cnpjV1RegexPretty.MatchString(res) {
 			t.Errorf("Expected CNPJ to match the regex, got: %v", res)
 		}
 	})
 
-	t.Run("Should return a valid CNPJ in non-pretty mode", func(t *testing.T) {
+	t.Run("Should return a valid CNPJ in non-pretty mode [V1]", func(t *testing.T) {
 		// Arrange
 		sut := cnpj.New()
 
 		// Act
-		res := sut.Generate(false)
+		res := sut.Generate()
 
 		// Assert
 		err := sut.IsValid(res)
@@ -137,7 +139,48 @@ func TestGenerate(t *testing.T) {
 			t.Errorf("Expected no error, got: %v", err)
 		}
 
-		if !cnpjRegexNonPretty.MatchString(res) {
+		if !cnpjV1RegexNonPretty.MatchString(res) {
+			t.Errorf("Expected CNPJ to match the regex, got: %v", res)
+		}
+	})
+
+	t.Run("Should return a valid CNPJ in pretty mode [V2]", func(t *testing.T) {
+		// Arrange
+		sut := cnpj.New()
+
+		// Act
+		res := sut.Generate(
+			cnpj.WithVersion(cnpj.V2),
+			cnpj.WithPrettyFormat(),
+		)
+
+		// Assert
+		err := sut.IsValid(res)
+
+		if err != nil {
+			t.Errorf("Expected no error, got: %v", err)
+		}
+
+		if !cnpjV2RegexPretty.MatchString(res) {
+			t.Errorf("Expected CNPJ to match the regex, got: %v", res)
+		}
+	})
+
+	t.Run("Should return a valid CNPJ in non-pretty mode [V2]", func(t *testing.T) {
+		// Arrange
+		sut := cnpj.New()
+
+		// Act
+		res := sut.Generate(cnpj.WithVersion(cnpj.V2))
+
+		// Assert
+		err := sut.IsValid(res)
+
+		if err != nil {
+			t.Errorf("Expected no error, got: %v", err)
+		}
+
+		if !cnpjV2RegexNonPretty.MatchString(res) {
 			t.Errorf("Expected CNPJ to match the regex, got: %v", res)
 		}
 	})

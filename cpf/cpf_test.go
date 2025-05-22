@@ -79,7 +79,7 @@ func TestGenerate(t *testing.T) {
 		sut := cpf.New()
 
 		// Act
-		res := sut.Generate(true)
+		res := sut.Generate(cpf.WithPrettyFormat())
 
 		// Assert
 		err := sut.IsValid(res)
@@ -98,7 +98,7 @@ func TestGenerate(t *testing.T) {
 		sut := cpf.New()
 
 		// Act
-		res := sut.Generate(false)
+		res := sut.Generate()
 
 		// Assert
 		err := sut.IsValid(res)

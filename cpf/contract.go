@@ -18,7 +18,22 @@ type Service interface {
 	// Example:
 	//
 	//	svc := cpf.New()
-	//	cpf := svc.Generate(true)	// true for pretty format
-	//	fmt.Println(cpf)		// 123.456.789-10
-	Generate(pretty bool) string
+	//	cpf := svc.Generate()
+	//	fmt.Println(cpf) // 12345678910
+	Generate(opts ...func(*generatorOptions)) string
+}
+
+type generatorOptions struct {
+	prettyFormat bool
+}
+
+// Sets the pretty format of the CPF when generating a new one
+//
+// Example:
+//
+//	cpf := svc.Generate(cpf.WithPrettyFormat())
+func WithPrettyFormat() func(*generatorOptions) {
+	return func(opts *generatorOptions) {
+		opts.prettyFormat = true
+	}
 }
