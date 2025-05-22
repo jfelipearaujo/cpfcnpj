@@ -1,23 +1,6 @@
 TAG := $(shell git describe --tags --abbrev=0 2>/dev/null)
 VERSION := $(shell echo $(TAG) | sed 's/v//')
 
-install-go:
-	@desiredVersion="go1.23.4"; \
-	currentVersion=$$(go version | grep -oE '[0-9]+\.[0-9]+\.[0-9]+'); \
-	echo "Current version: $$currentVersion"; \
-	if [ "$$desiredVersion" != "$$currentVersion" ]; then \
-		echo "Installing $$desiredVersion..."; \
-		sudo rm -rf /usr/local/go; \
-		wget --quiet https://go.dev/dl/$$desiredVersion.linux-amd64.tar.gz; \
-		sudo tar -C /usr/local -xzf $$desiredVersion.linux-amd64.tar.gz; \
-		rm $$desiredVersion.linux-amd64.tar.gz; \
-		export PATH=$HOME/go/bin:/usr/local/go/bin:$PATH; \
-		echo "Done!"; \
-		go version; \
-	else \
-		echo "Go $$desiredVersion is already installed. Skipping..."; \
-	fi
-
 tag:
 	@if [ -z "$(TAG)" ]; then \
         echo "No previous version found. Creating v1.0.0 tag..."; \
