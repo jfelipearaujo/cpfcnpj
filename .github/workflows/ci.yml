@@ -1,11 +1,7 @@
 name: continuous integration
 
 on:
-  push:
-    paths:
-      - '**.go'
-      - go.sum
-      - go.mod
+  workflow_dispatch:
   pull_request:
     types: [opened, synchronize, reopened]
 
