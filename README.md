@@ -1,5 +1,5 @@
 # cpfcnpj
-[![tests](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/tests.yml/badge.svg)](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/tests.yml)
+[![continuous integration](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/ci.yml/badge.svg)](https://github.com/jfelipearaujo/cpfcnpj/actions/workflows/ci.yml)
 [![codecov](https://codecov.io/github/jfelipearaujo/cpfcnpj/graph/badge.svg?token=BR99CZ9VZ8)](https://codecov.io/github/jfelipearaujo/cpfcnpj)
 [![version](https://img.shields.io/github/v/release/jfelipearaujo/cpfcnpj.svg)](https://github.com/jfelipearaujo/cpfcnpj/releases/latest)
 [![license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/jfelipearaujo/cpfcnpj/blob/main/LICENSE)
@@ -15,8 +15,18 @@ Download the package:
 ```bash
 go get github.com/jfelipearaujo/cpfcnpj@latest
 ```
+# How to use
 
-## How to use - CPF Validation
+- [cpfcnpj](#cpfcnpj)
+- [How to use](#how-to-use)
+  - [CPF Validation](#cpf-validation)
+  - [CNPJ Validation](#cnpj-validation)
+  - [CPF Generator](#cpf-generator)
+  - [CNPJ Generator](#cnpj-generator)
+  - [Contributing](#contributing)
+  - [LICENSE](#license)
+
+## CPF Validation
 
 Import the package:
 
@@ -27,19 +37,19 @@ import "github.com/jfelipearaujo/cpf"
 Create a new instance of the service:
 
 ```go
-svc := cpf.New("123.456.789-10")
+svc := cpf.New()
 ```
 
 Validate if the CPF is valid or not:
 
 ```go
-err := svc.IsValid()
+err := svc.IsValid("123.456.789-10")
 if err != nil {
     // Handle invalid CPF
 }
 ```
 
-## How to use - CNPJ Validation
+## CNPJ Validation
 
 Import the package:
 
@@ -50,16 +60,56 @@ import "github.com/jfelipearaujo/cpfcnpj/cnpj"
 Create a new instance of the service:
 
 ```go
-svc := cnpj.New("12.ABC.345/01DE-35")
+svc := cnpj.New()
 ```
 
 Validate if the CNPJ is valid or not:
 
 ```go
-err := svc.IsValid()
+err := svc.IsValid("12.ABC.345/01DE-35")
 if err != nil {
     // Handle invalid CNPJ
 }
+```
+
+## CPF Generator
+
+Import the package:
+
+```go
+import "github.com/jfelipearaujo/cpf"
+```
+
+Create a new instance of the service:
+
+```go
+svc := cpf.New()
+```
+
+Generate a new CPF:
+
+```go
+cpf := svc.Generate(true) // true to generate with pretty format
+```
+
+## CNPJ Generator
+
+Import the package:
+
+```go
+import "github.com/jfelipearaujo/cpfcnpj/cnpj"
+```
+
+Create a new instance of the service:
+
+```go
+svc := cnpj.New()
+```
+
+Generate a new CNPJ:
+
+```go
+cnpj := svc.Generate(true) // true to generate with pretty format
 ```
 
 ## Contributing
