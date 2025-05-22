@@ -6,10 +6,19 @@ type Service interface {
 	//
 	// Example:
 	//
-	//	svc := cpf.New("123.456.789-10")
-	//	err := svc.IsValid()
+	//	svc := cpf.New()
+	//	err := svc.IsValid("123.456.789-10")
 	//	if err != nil {
 	//		// Handle invalid CPF
 	//	}
-	IsValid() error
+	IsValid(cpf string) error
+
+	// Generates a random CPF
+	//
+	// Example:
+	//
+	//	svc := cpf.New()
+	//	cpf := svc.Generate(true)	// true for pretty format
+	//	fmt.Println(cpf)		// 123.456.789-10
+	Generate(pretty bool) string
 }

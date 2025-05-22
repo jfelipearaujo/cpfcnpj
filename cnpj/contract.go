@@ -8,10 +8,19 @@ type Service interface {
 	//
 	// Example:
 	//
-	//	svc := cnpj.New("12.ABC.345/01DE-35")
-	//	err := svc.IsValid()
+	//	svc := cnpj.New()
+	//	err := svc.IsValid("12.ABC.345/01DE-35")
 	//	if err != nil {
 	//		// Handle invalid CNPJ
 	//	}
-	IsValid() error
+	IsValid(cnpj string) error
+
+	// Generates a random CNPJ
+	//
+	// Example:
+	//
+	//	svc := cnpj.New()
+	//	cnpj := svc.Generate(true)	// true for pretty format
+	//	fmt.Println(cnpj)		// 12.ABC.345/01DE-35
+	Generate(pretty bool) string
 }

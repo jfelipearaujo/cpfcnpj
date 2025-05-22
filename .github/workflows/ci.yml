@@ -50,5 +50,46 @@ jobs:
       - name: Run lint
         run: make lint
 
+  test:
+    strategy:
+      fail-fast: true
+      matrix:
+        go-version: [1.22.x,1.23.x,1.24.x]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: ${{ matrix.go-version }}
+
+      - name: Deps cache
+        id: cache-go-deps
+        uses: actions/cache@v4
+        env:
+          cache-name: go-deps-cache
+        with:
+          path: ~/godeps
+          key: ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-build-${{ env.cache-name }}-
+
+      - if: ${{ steps.cache-go-deps.outputs.cache-hit != 'true' }}
+        name: List the state of go modules
+        continue-on-error: true
+        run: go mod graph
+
+      - name: Install dependencies
+        run: |
+          go mod tidy
+          go mod download
+
       - name: Run tests
         run: make test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
