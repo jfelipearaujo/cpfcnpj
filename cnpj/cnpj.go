@@ -1,52 +1,69 @@
 package cnpj
 
-import "regexp"
+import (
+	"fmt"
+	"regexp"
+
+	"github.com/jfelipearaujo/cpfcnpj/shared"
+)
 
 var patternNumbersLetters = regexp.MustCompile(PATTERN_NUMBERS_LETTERS)
 
-type service struct {
-	CNPJ string
+type service struct{}
+
+func New() Service {
+	return &service{}
 }
 
-func New(cnpj string) Service {
-	return &service{
-		CNPJ: cnpj,
-	}
-}
+func (svc *service) IsValid(cnpj string) error {
+	cnpj = shared.CleanString(patternNumbersLetters, cnpj, "")
 
-func (svc *service) IsValid() error {
-	svc.clean()
-
-	if len(svc.CNPJ) != EXPECTED_LENGTH {
+	if len(cnpj) != EXPECTED_LENGTH {
 		return ErrInvalidLength
 	}
 
-	firstVerificationDigit := svc.calculateDigit(true)
-	secondVerificationDigit := svc.calculateDigit(false)
-
-	if firstVerificationDigit != int(svc.CNPJ[12]-'0') || secondVerificationDigit != int(svc.CNPJ[13]-'0') {
+	if !svc.checkDigits(cnpj) {
 		return ErrInvalidCnpj
 	}
 
 	return nil
 }
 
-func (svc *service) clean() {
-	svc.CNPJ = patternNumbersLetters.ReplaceAllString(svc.CNPJ, "")
-}
+func (svc *service) Generate(pretty bool) string {
+	cnpj := shared.RandomLettersAndNumbers(EXPECTED_LENGTH - 2)
+	cnpj = append(cnpj, svc.calculateDigit(cnpj, len(cnpj)))
+	cnpj = append(cnpj, svc.calculateDigit(cnpj, len(cnpj)))
 
-func (svc *service) calculateDigit(isFirst bool) int {
-	maxIndex := 12
-	weights := 2
+	var out string
 
-	if !isFirst {
-		maxIndex = 13
+	for _, digit := range cnpj {
+		out += string(digit)
 	}
 
+	if pretty {
+		out = fmt.Sprintf("%s.%s.%s/%s-%s", out[0:2], out[2:5], out[5:8], out[8:12], out[12:14])
+	}
+
+	return out
+}
+
+func (svc *service) checkDigits(cnpj string) bool {
+	return svc.checkDigit(cnpj, 12) && svc.checkDigit(cnpj, 13)
+}
+
+func (svc *service) checkDigit(cnpj string, digitIndex int) bool {
+	digit := svc.calculateDigit(shared.StringToRuneSlice(cnpj), digitIndex)
+	x := rune(cnpj[digitIndex])
+
+	return digit == x
+}
+
+func (svc *service) calculateDigit(data []rune, n int) rune {
+	weights := 2
 	total := 0
 
-	for i := maxIndex; i > 0; i-- {
-		total += int(svc.CNPJ[i-1]-'0') * weights
+	for i := n - 1; i >= 0; i-- {
+		total += int(data[i]-'0') * weights
 		weights++
 		if weights > 9 {
 			weights = 2
@@ -60,5 +77,5 @@ func (svc *service) calculateDigit(isFirst bool) int {
 		digit = 0
 	}
 
-	return digit
+	return '0' + rune(digit)
 }

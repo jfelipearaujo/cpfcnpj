@@ -32,7 +32,7 @@ tag:
     fi
 
 test:
-	go test ./...
+	go test -count=1 -race -cover -coverprofile=coverage.txt ./...
 
 lint:
 	golangci-lint run

@@ -1,64 +1,75 @@
 package cpf
 
 import (
+	"fmt"
 	"regexp"
+	"strconv"
+
+	"github.com/jfelipearaujo/cpfcnpj/shared"
 )
 
 var patternOnlyNumbers = regexp.MustCompile(PATTERN_ONLY_NUMBERS)
 
-type service struct {
-	CPF string
+type service struct{}
+
+func New() Service {
+	return &service{}
 }
 
-func New(cpf string) Service {
-	return &service{
-		CPF: cpf,
-	}
-}
+func (svc *service) IsValid(cpf string) error {
+	cpf = shared.CleanString(patternOnlyNumbers, cpf, "")
 
-func (svc *service) IsValid() error {
-	svc.clean()
-
-	if len(svc.CPF) != EXPECTED_LENGTH {
+	if len(cpf) != EXPECTED_LENGTH {
 		return ErrInvalidLength
 	}
 
-	firstVerificationDigit := svc.calculateDigit(true)
-	secondVerificationDigit := svc.calculateDigit(false)
-
-	if firstVerificationDigit != int(svc.CPF[9]-'0') || secondVerificationDigit != int(svc.CPF[10]-'0') {
+	if !svc.checkDigits(cpf) {
 		return ErrInvalidCpf
 	}
 
 	return nil
 }
 
-func (svc *service) clean() {
-	svc.CPF = patternOnlyNumbers.ReplaceAllString(svc.CPF, "")
+func (svc *service) Generate(pretty bool) string {
+	cpf := shared.RandomNumbers(EXPECTED_LENGTH - 2)
+	cpf = append(cpf, svc.calculateDigit(cpf, len(cpf)))
+	cpf = append(cpf, svc.calculateDigit(cpf, len(cpf)))
+
+	var out string
+
+	for _, digit := range cpf {
+		out += strconv.Itoa(digit)
+	}
+
+	if pretty {
+		out = fmt.Sprintf("%s.%s.%s-%s", out[0:3], out[3:6], out[6:9], out[9:11])
+	}
+
+	return out
 }
 
-func (svc *service) calculateDigit(isFirst bool) int {
-	maxIndex := 9
-	weights := 10
+func (svc *service) checkDigits(cpf string) bool {
+	return svc.checkDigit(cpf, 9) && svc.checkDigit(cpf, 10)
+}
 
-	if !isFirst {
-		weights = 11
-		maxIndex = 10
+func (svc *service) checkDigit(cpf string, digitIndex int) bool {
+	digit := svc.calculateDigit(shared.StringToIntSlice(cpf), digitIndex)
+
+	x, err := strconv.Atoi(string(cpf[digitIndex]))
+	if err != nil {
+		return false
 	}
+	return digit == x
+}
 
-	total := 0
-
-	for _, c := range svc.CPF[0:maxIndex] {
-		total += int(c-'0') * weights
-		weights--
+func (svc *service) calculateDigit(data []int, n int) int {
+	var total int
+	for i := range n {
+		total += data[i] * (n + 1 - i)
 	}
-
-	rest := total % 11
-	digit := 11 - rest
-
-	if digit >= 10 {
-		digit = 0
+	total = total % 11
+	if total < 2 {
+		return 0
 	}
-
-	return digit
+	return 11 - total
 }
