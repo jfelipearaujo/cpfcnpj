@@ -11,14 +11,19 @@ on:
 
 jobs:
   lint:
+    strategy:
+      fail-fast: true
+      matrix:
+        go-version: [1.22.x,1.23.x,1.24.x]
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.23.x'
+          go-version: ${{ matrix.go-version }}
 
       - name: Deps cache
         id: cache-go-deps
@@ -42,9 +47,8 @@ jobs:
           go mod download
           go install github.com/golangci/golangci-lint/cmd/golangci-lint@v1.62.2
 
-      - name: Run golangci-lint
-        run: golangci-lint run
+      - name: Run lint
+        run: make lint
 
       - name: Run tests
-        run: |
-          go test ./...
+        run: make test
