@@ -1,10 +1,10 @@
 package cnpj_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/jfelipearaujo/cpfcnpj/cnpj"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestIsValid(t *testing.T) {
@@ -18,7 +18,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.NoError(t, res)
+		if res != nil {
+			t.Errorf("Expected no error, got %v", res)
+		}
 	})
 
 	t.Run("Should return error if CNPJ is invalid", func(t *testing.T) {
@@ -31,8 +33,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cnpj.ErrInvalidCnpj)
+		if !errors.Is(res, cnpj.ErrInvalidCnpj) {
+			t.Errorf("Expected error to be %v, got %v", cnpj.ErrInvalidCnpj, res)
+		}
 	})
 
 	t.Run("Should return error if CNPJ is smaller than 14 numbers", func(t *testing.T) {
@@ -45,8 +48,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cnpj.ErrInvalidLength)
+		if !errors.Is(res, cnpj.ErrInvalidLength) {
+			t.Errorf("Expected error to be %v, got %v", cnpj.ErrInvalidLength, res)
+		}
 	})
 
 	t.Run("Should return error if CNPJ is bigger than 14 numbers", func(t *testing.T) {
@@ -59,8 +63,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cnpj.ErrInvalidLength)
+		if !errors.Is(res, cnpj.ErrInvalidLength) {
+			t.Errorf("Expected error to be %v, got %v", cnpj.ErrInvalidLength, res)
+		}
 	})
 
 	t.Run("Should return no error if CNPJ (new version) is valid", func(t *testing.T) {
@@ -73,7 +78,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.NoError(t, res)
+		if res != nil {
+			t.Errorf("Expected no error, got %v", res)
+		}
 	})
 
 	t.Run("Should return error if CNPJ (new version) is invalid", func(t *testing.T) {
@@ -86,7 +93,8 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cnpj.ErrInvalidCnpj)
+		if !errors.Is(res, cnpj.ErrInvalidCnpj) {
+			t.Errorf("Expected error to be %v, got %v", cnpj.ErrInvalidCnpj, res)
+		}
 	})
 }

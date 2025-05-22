@@ -1,10 +1,10 @@
 package cpf_test
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/jfelipearaujo/cpfcnpj/cpf"
-	"github.com/stretchr/testify/assert"
 )
 
 func TestIsValid(t *testing.T) {
@@ -18,7 +18,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.NoError(t, res)
+		if res != nil {
+			t.Errorf("Expected no error, got %v", res)
+		}
 	})
 
 	t.Run("Should return error if CPF is invalid", func(t *testing.T) {
@@ -31,8 +33,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cpf.ErrInvalidCpf)
+		if !errors.Is(res, cpf.ErrInvalidCpf) {
+			t.Errorf("Expected error to be %v, got %v", cpf.ErrInvalidCpf, res)
+		}
 	})
 
 	t.Run("Should return error if CPF is smaller than 11 numbers", func(t *testing.T) {
@@ -45,8 +48,9 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cpf.ErrInvalidLength)
+		if !errors.Is(res, cpf.ErrInvalidLength) {
+			t.Errorf("Expected error to be %v, got %v", cpf.ErrInvalidLength, res)
+		}
 	})
 
 	t.Run("Should return error if CPF is bigger than 11 numbers", func(t *testing.T) {
@@ -59,7 +63,8 @@ func TestIsValid(t *testing.T) {
 		res := sut.IsValid()
 
 		// Assert
-		assert.Error(t, res)
-		assert.ErrorIs(t, res, cpf.ErrInvalidLength)
+		if !errors.Is(res, cpf.ErrInvalidLength) {
+			t.Errorf("Expected error to be %v, got %v", cpf.ErrInvalidLength, res)
+		}
 	})
 }
